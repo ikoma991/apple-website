@@ -1,7 +1,7 @@
 import { OrbitControls, PerspectiveCamera, View } from '@react-three/drei';
 import * as THREE from 'three';
 import Lights from './Lights';
-import { MutableRefObject, Suspense } from 'react';
+import { MutableRefObject, Suspense, useMemo } from 'react';
 
 import Loader from './Loader';
 import IPhone from './IPhone';
@@ -28,6 +28,10 @@ const ModelView: React.FC<ModelViewProps> = ({
   size,
   item,
 }) => {
+  const scaleProps = useMemo(() => {
+    return index === 1 ? [15, 15, 15] : [17, 17, 17];
+  }, [index]);
+
   return (
     <View
       index={index}
@@ -56,11 +60,7 @@ const ModelView: React.FC<ModelViewProps> = ({
         position={[0, 0, 0]}
       >
         <Suspense fallback={<Loader />}>
-          <IPhone
-            scale={index === 1 ? [15, 15, 15] : [17, 17, 17]}
-            item={item}
-            size={size}
-          />
+          <IPhone scale={scaleProps} item={item} size={size} />
         </Suspense>
       </group>
     </View>
