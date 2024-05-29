@@ -1,16 +1,18 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import * as THREE from 'three';
 import { Canvas } from '@react-three/fiber';
+import { View } from '@react-three/drei';
+
 import ModelView from './ModelView';
 import { yellowImg } from '../utils';
-import { View } from '@react-three/drei';
 import { models, sizes } from '../constants';
+import { animateWithGsapTimeline } from '../utils/animations';
 
 const Model = () => {
   const [smallRotation, setSmallRotation] = useState();
-  const [largeRoration, setLargeRoration] = useState();
+  const [largeRotation, setLargeRotation] = useState();
   const [size, setSize] = useState('small');
   const [model, setModel] = useState({
     title: 'iPhone 15 Pro in Natural Titanium',
@@ -23,6 +25,39 @@ const Model = () => {
 
   const small = useRef(new THREE.Group());
   const large = useRef(new THREE.Group());
+
+  const tl = gsap.timeline();
+
+  useEffect(() => {
+    if (size === 'large') {
+      const animateWithGsapTimelineProps = {
+        timeline: tl,
+        rotationRef: small,
+        rotationState: smallRotation,
+        firstTarget: '#view1',
+        secondTarget: '#view2',
+        animationProps: {
+          transform: 'translateX(-100%)',
+          duration: 2,
+        },
+      };
+      animateWithGsapTimeline(animateWithGsapTimelineProps);
+    }
+    if (size === 'small') {
+      const animateWithGsapTimelineProps = {
+        timeline: tl,
+        rotationRef: large,
+        rotationState: largeRotation,
+        firstTarget: '#view2',
+        secondTarget: '#view1',
+        animationProps: {
+          transform: 'translateX(0%)',
+          duration: 2,
+        },
+      };
+      animateWithGsapTimeline(animateWithGsapTimelineProps);
+    }
+  }, [size]);
 
   useGSAP(() => {
     gsap.to('#heading', {
@@ -53,7 +88,7 @@ const Model = () => {
               groupRef={large}
               gsapType='view2'
               controlRef={cameraControlLarge}
-              setRotationState={setLargeRoration}
+              setRotationState={setLargeRotation}
               item={model}
               size={size}
             />

@@ -1,11 +1,25 @@
 import { OrbitControls, PerspectiveCamera, View } from '@react-three/drei';
 import * as THREE from 'three';
 import Lights from './Lights';
-import { Suspense } from 'react';
+import { MutableRefObject, Suspense } from 'react';
 
 import Loader from './Loader';
 import IPhone from './IPhone';
-const ModelView = ({
+
+interface ModelViewProps {
+  index: number;
+  groupRef: MutableRefObject<THREE.Group<THREE.Object3DEventMap>>;
+  gsapType: string;
+  size: string;
+  controlRef: MutableRefObject<any>;
+  setRotationState: any;
+  item: {
+    title: string;
+    color: string[];
+    img: string;
+  };
+}
+const ModelView: React.FC<ModelViewProps> = ({
   index,
   groupRef,
   gsapType,
